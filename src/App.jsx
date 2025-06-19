@@ -12,12 +12,17 @@ import PrivateRoute from "./components/PrivateRoutes"
 import PublicRoute from "./components/PublicRoutes"
 import useAutoLogin from "./hooks/useAutoLogin"
 import useTokenRefresh from "./hooks/useTokenRefresh"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 
 function App() {
+  const queryClient = new QueryClient();
+
     useAutoLogin();
     useTokenRefresh();
   return (
-     <>
+         <QueryClientProvider client={queryClient}>
+      {/* Your Routes or Components */}
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -33,6 +38,11 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } />
+          <Route path="/login" element={
             <PublicRoute>
               <Login />
             </PublicRoute>
@@ -66,7 +76,7 @@ function App() {
           } />
         </Routes>
       </Router>
-    </>
+    </QueryClientProvider>
   )
 }
 

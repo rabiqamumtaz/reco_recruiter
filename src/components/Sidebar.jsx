@@ -1,19 +1,34 @@
-"use client"
+"use client";
 
-import { NavLink } from "react-router-dom"
-import { MdDashboard, MdWork, MdFeedback, MdClose } from "react-icons/md"
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { MdDashboard, MdWork, MdFeedback, MdClose } from "react-icons/md";
+import { X } from "lucide-react";
+import { ShieldUser } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const navItems = [
     { path: "/dashboard", icon: MdDashboard, label: "Dashboard" },
     { path: "/job-listings", icon: MdWork, label: "Job Listings" },
     { path: "/feedback", icon: MdFeedback, label: "Feedback" },
-  ]
+  ];
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    if (onClose) {
+      onClose();
+    }
+  };
   return (
     <>
       {/* Mobile overlay */}
-      {isOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={onClose} />}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
 
       {/* Sidebar */}
       <div
@@ -23,38 +38,53 @@ const Sidebar = ({ isOpen, onClose }) => {
         md:translate-x-0 transition-transform duration-300 ease-in-out
       `}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        {/* Header */}
+        <div className="flex items-center justify-between py-4 px-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">rec</span>
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">R</span>
             </div>
-            <span className="font-semibold text-gray-900">Recruiter Portal</span>
+            <span className="font-semibold text-gray-900">reco</span>
           </div>
-          <button onClick={onClose} className="md:hidden text-gray-500 hover:text-gray-700">
-            <MdClose size={24} />
-          </button>
+          {/* Close button for mobile */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden text-gray-500 hover:text-gray-700"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
-        <nav className="mt-6">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 ${
-                  isActive ? "bg-gray-100 text-gray-900 border-r-2 border-black" : ""
-                }`
-              }
-              onClick={() => onClose()}
-            >
-              <item.icon className="mr-3" size={20} />
-              {item.label}
-            </NavLink>
-          ))}
+        <nav className="flex-1 p-4">
+          <div className="space-y-2">
+            <div className=" flex gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <ShieldUser />
+              <span className="p-1">Recruitar Portal</span>
+            </div>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                    isActive
+                      ? "bg-blue-50 text-blue-700 border-r-2 border-blue-700"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`
+                }
+                onClick={() => onClose()}
+              >
+                <item.icon className="mr-3" size={20} />
+                {item.label}
+              </NavLink>
+            ))}
+          </div>
         </nav>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

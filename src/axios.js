@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import store from "./store/index";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/recruiters",
+  baseURL: "https://reco-245q.onrender.com/api",
   withCredentials: true,
   timeout: 10000,
 });
@@ -46,7 +46,7 @@ api.interceptors.response.use(
         // Use a single refresh promise for all concurrent requests
         if (!refreshPromise && !isRefreshingToken) {
           isRefreshingToken = true;
-          refreshPromise = api.get("/auth/refresh-token", {
+          refreshPromise = api.get("/users/auth/refresh-token", {
             withCredentials: true,
             _silentRefresh: true,
           });

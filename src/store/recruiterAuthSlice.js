@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   isAuthenticated: false,
-  recruiter: null,
+  user: null,
   token: null,
   loading: false,
   error: null,
@@ -36,7 +36,7 @@ const recruiterAuthSlice = createSlice({
       })
       .addCase('recruiterAuth/loginRecruiter/fulfilled', (state, action) => {
         state.isAuthenticated = true;
-        state.recruiter = action.payload.recruiter;
+        state.user = action.payload.user;
         state.token = action.payload.token;
         state.loading = false;
         state.error = null;
@@ -44,7 +44,7 @@ const recruiterAuthSlice = createSlice({
       })
       .addCase('recruiterAuth/loginRecruiter/rejected', (state, action) => {
         state.isAuthenticated = false;
-        state.recruiter = null;
+        state.user = null;
         state.token = null;
         state.loading = false;
         state.error = action.payload;

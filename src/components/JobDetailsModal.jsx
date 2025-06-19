@@ -3,7 +3,7 @@ import { MdClose, MdLocationOn, MdWork, MdAttachMoney, MdSchedule, MdBusiness } 
 
 // Job details modal component
 const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
-  console.log(job)
+  // console.log(job)
   if (!isOpen || !job) return null
 
   // Function to get status badge styling
@@ -36,9 +36,9 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
               <div className="flex items-start sm:items-center justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   {/* Job title */}
-                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{job.title}</h2>
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{job?.title}</h2>
                   {/* Company name */}
-                  <p className="text-base sm:text-lg text-gray-600 mt-1 truncate">{job.company}</p>
+                  <p className="text-base sm:text-lg text-gray-600 mt-1 truncate">{job?.client?.fullName}</p>
                 </div>
                 {/* Status badge and close button */}
                 <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 flex-shrink-0">
@@ -64,8 +64,8 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                     <MdLocationOn className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900">Location</p>
-                      <p className="text-sm text-gray-600 break-words">{job.location}</p>
-                      {job.remote && (
+                      <p className="text-sm text-gray-600 break-words">{job?.location}</p>
+                      {job?.remote && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
                           Remote Available
                         </span>
@@ -78,7 +78,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                     <MdWork className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900">Job Type</p>
-                      <p className="text-sm text-gray-600">{job.type}</p>
+                      <p className="text-sm text-gray-600">{job?.type}</p>
                     </div>
                   </div>
 
@@ -87,7 +87,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                     <MdAttachMoney className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900">Salary</p>
-                      <p className="text-sm text-gray-600 break-words">{job.salary}</p>
+                      <p className="text-sm text-gray-600 break-words">{job?.salary}</p>
                     </div>
                   </div>
 
@@ -96,7 +96,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                     <MdSchedule className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900">Posted</p>
-                      <p className="text-sm text-gray-600">{job.postedDate}</p>
+                      <p className="text-sm text-gray-600">{job?.postedDate}</p>
                     </div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                 <div>
                   <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3">Job Description</h3>
                   <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                    <p className="text-sm text-gray-700 leading-relaxed">{job.description}</p>
+                    <p className="text-sm text-gray-700 leading-relaxed">{job?.description}</p>
                   </div>
                 </div>
 
@@ -114,7 +114,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                   <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3">Required Skills</h3>
                   {/* 🔥 RESPONSIVE SKILLS LAYOUT - Key Change #4 */}
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                    {job.skills.map((skill, index) => (
+                    {job?.skills.map((skill, index) => (
                       <span
                         key={index}
                         className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-blue-100 text-blue-800"
@@ -130,7 +130,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                   <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3">Requirements</h3>
                   <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <ul className="space-y-2">
-                      {job.requirements.map((requirement, index) => (
+                      {job?.requirements?.map((requirement, index) => (
                         <li key={index} className="flex items-start space-x-2">
                           <span className="text-blue-500 mt-1 flex-shrink-0">•</span>
                           <span className="text-sm text-gray-700 break-words">{requirement}</span>
@@ -147,7 +147,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                     {/* Company header */}
                     <div className="flex items-center space-x-2">
                       <MdBusiness className="text-gray-400 flex-shrink-0" size={20} />
-                      <h4 className="font-medium text-gray-900 truncate">{job.companyInfo.name}</h4>
+                      <h4 className="font-medium text-gray-900 truncate">{job?.client?.companyName}</h4>
                     </div>
 
                     {/* 🔥 RESPONSIVE COMPANY DETAILS - Key Change #5 */}
@@ -155,16 +155,16 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-sm">
                       <div className="break-words">
                         <span className="font-medium text-gray-900">Industry:</span>
-                        <span className="text-gray-600 ml-2">{job.companyInfo.industry}</span>
+                        <span className="text-gray-600 ml-2">{job?.client?.industryType}</span>
                       </div>
                       <div className="break-words">
                         <span className="font-medium text-gray-900">Company Size:</span>
-                        <span className="text-gray-600 ml-2">{job.companyInfo.size}</span>
+                        <span className="text-gray-600 ml-2">{job?.client?.companySize}</span>
                       </div>
                     </div>
 
                     {/* Company description */}
-                    <p className="text-sm text-gray-700 leading-relaxed break-words">{job.companyInfo.description}</p>
+                    <p className="text-sm text-gray-700 leading-relaxed break-words">{job?.client?.comapnyDescription}</p>
                   </div>
                 </div>
               </div>
@@ -184,8 +184,8 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation()
-                  console.log("Applying to job:", job.id)
-                  goToCandidate(job.id)
+                  // console.log("Applying to job:", job.id)
+                  goToCandidate(job)
                   // Handle job application logic here
                 }}
                 className="w-full z-50 sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none order-1 sm:order-2"

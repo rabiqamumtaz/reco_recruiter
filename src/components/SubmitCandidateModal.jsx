@@ -1,15 +1,21 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { MdClose, MdKeyboardArrowDown } from "react-icons/md"
+import { fetchUserByRole } from "../apis/jobs"
 
 const SubmitCandidateModal = ({ isOpen, onClose, candidate, jobTitle, company }) => {
-  const [selectedAccountManager, setSelectedAccountManager] = useState("Sarah Johnson")
+  const [selectedAccountManager, setSelectedAccountManager] = useState(null)
   const [notes, setNotes] = useState("")
   const [showDropdown, setShowDropdown] = useState(false)
 
-  const accountManagers = ["Sarah Johnson", "Mike Chen", "Lisa Rodriguez", "John Martinez"]
-
+    const { data:accountManagers, isLoading, error } = useQuery({
+    queryKey: ['Account Manager'],
+    queryFn: fetchUserByRole
+  });
+console.log(selectedAccountManager)
+console.log( "hello123123",accountManagers)
   const handleSubmit = () => {
     console.log("Submitting candidate:", {
       candidate,
@@ -62,7 +68,7 @@ const SubmitCandidateModal = ({ isOpen, onClose, candidate, jobTitle, company })
                     onClick={() => setShowDropdown(!showDropdown)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <span>{selectedAccountManager}</span>
+                    <span>{selectedAccountManager? selectedAccountManager.name:"-- --"}</span>
                     <MdKeyboardArrowDown size={20} />
                   </button>
 
@@ -71,16 +77,16 @@ const SubmitCandidateModal = ({ isOpen, onClose, candidate, jobTitle, company })
                       <div className="fixed inset-0 z-10" onClick={() => setShowDropdown(false)} />
                       <div className="absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
                         <div className="py-1">
-                          {accountManagers.map((manager) => (
+                          {accountManagers?.map((manager) => (
                             <button
-                              key={manager}
+                              key={manager._id}
                               onClick={() => {
                                 setSelectedAccountManager(manager)
                                 setShowDropdown(false)
                               }}
                               className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:outline-none"
                             >
-                              {manager}
+                              {manager.name}
                             </button>
                           ))}
                         </div>

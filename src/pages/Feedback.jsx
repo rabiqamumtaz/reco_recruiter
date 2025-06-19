@@ -2,32 +2,30 @@ import { HiOutlineDocumentReport } from "react-icons/hi";
 import { BiMessageDetail } from "react-icons/bi";
 import { FaChartLine } from "react-icons/fa";
 
-
 const Feedback = () => {
-const stats = [
-  {
-    title: "Total Submissions",
-    value: "0",
-    subtitle: "All time",
-    icon: HiOutlineDocumentReport,
-    color: "bg-blue-400",
-  },
-  {
-    title: "Feedback Received",
-    value: "4",
-    subtitle: "From clients",
-    icon: BiMessageDetail,
-    color: " bg-yellow-400",
-  },
-  {
-    title: "Success Rate",
-    value: "50%",
-    subtitle: "Positive feedback",
-    icon: FaChartLine,
-    color: "bg-green-400",
-  },
-];
-
+  const stats = [
+    {
+      title: "Total Submissions",
+      value: "0",
+      subtitle: "All time",
+      icon: HiOutlineDocumentReport,
+      color: "text-[#78c5d8]",
+    },
+    {
+      title: "Feedback Received",
+      value: "4",
+      subtitle: "From clients",
+      icon: BiMessageDetail,
+      color: "text-[#f0b484]",
+    },
+    {
+      title: "Success Rate",
+      value: "50%",
+      subtitle: "Positive feedback",
+      icon: FaChartLine,
+      color: "text-[#73b386]",
+    },
+  ];
 
   const feedbackItems = [
     {
@@ -66,63 +64,80 @@ const stats = [
       from: "John Martinez",
       status: "Negative",
     },
-  ]
+  ];
 
   const getStatusColor = (status) => {
     switch (status) {
       case "Positive":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "Negative":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "Request for More":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Feedback on Previous Submissions</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Feedback on Previous Submissions
+        </h1>
         <p className="text-gray-600">
-          Review feedback from account managers and clients on your candidate submissions.
+          Review feedback from account managers and clients on your candidate
+          submissions.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-           <div key={index} className="card">
-            <div className="flex items-center">
-              <div className={`p-3 rounded-lg ${stat.color}`}>
-                <stat.icon className="text-white" size={24} />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                <p className="text-xs text-gray-500">{stat.subtitle}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {stats.map((stat, i) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={i}
+              className="bg-white text-gray-900 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs sm:text-sm opacity-70 mb-1">
+                    {stat.title}
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold">{stat.value}</p>
+                </div>
+                <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${stat.color}`} />
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Feedback */}
         <div className="card">
           <h3 className="text-lg font-semibold mb-4">Recent Feedback</h3>
-          <p className="text-sm text-gray-600 mb-4">Latest feedback from account managers and clients</p>
+          <p className="text-sm text-gray-600 mb-4">
+            Latest feedback from account managers and clients
+          </p>
 
           <div className="space-y-4">
             {feedbackItems.map((item, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-4">
+              <div
+                key={index}
+                className="border border-gray-200 rounded-lg p-4"
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <h4 className="font-medium text-gray-900">{item.name}</h4>
                     <p className="text-sm text-gray-600">{item.position}</p>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                      item.status
+                    )}`}
+                  >
                     {item.status}
                   </span>
                 </div>
@@ -142,7 +157,9 @@ const stats = [
         {/* Submission Status */}
         <div className="card">
           <h3 className="text-lg font-semibold mb-4">Submission Status</h3>
-          <p className="text-sm text-gray-600 mb-4">Track the status of your candidate submissions</p>
+          <p className="text-sm text-gray-600 mb-4">
+            Track the status of your candidate submissions
+          </p>
 
           <div className="space-y-4">
             <div className="text-center py-8">
@@ -152,7 +169,7 @@ const stats = [
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Feedback
+export default Feedback;

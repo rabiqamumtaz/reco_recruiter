@@ -12,7 +12,7 @@ export const registerRecruiter = createAsyncThunk(
         }
       }
 
-      const response = await api.post('/auth/register', form, {
+      const response = await api.post('/users/auth/register', form, {
         headers: { "Content-Type": "multipart/form-data" },
         _skipAuth: true,
       });
@@ -31,12 +31,12 @@ export const loginRecruiter = createAsyncThunk(
   "recruiterAuth/loginRecruiter",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await api.post("/auth/login", { email, password }, {
+      const response = await api.post("/users/auth/login", { email, password }, {
         _skipAuth: true,
       });
-
+      // console.log(response.data)
       return {
-        recruiter: response.data.recruiter,
+        user: response.data.user,
         token: response.data.token,
       };
     } catch (err) {
@@ -49,7 +49,7 @@ export const silentRefresh = createAsyncThunk(
   'recruiterAuth/silentRefresh',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/auth/refresh-token', {
+      const response = await api.get('/users/auth/refresh-token', {
         withCredentials: true,
         _silentRefresh: true
       });
@@ -72,7 +72,7 @@ export const verifyOtp = createAsyncThunk(
   'recruiterAuth/verifyOtp',
   async ({ email, otp }, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/verify-otp', { email, otp }, {
+      const response = await api.post('/users/auth/verify-otp', { email, otp }, {
         _skipAuth: true
       });
 
@@ -90,7 +90,7 @@ export const resendOtp = createAsyncThunk(
   "recruiterAuth/resendOtp",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await api.post("//auth/resend-otp", { email }, {
+      const response = await api.post("/users/auth/resend-otp", { email }, {
         _skipAuth: true,
       });
       return response.data.message;
@@ -104,7 +104,7 @@ export const logoutRecruiter = createAsyncThunk(
   'recruiterAuth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      await api.post('/auth/logout', {}, {
+      await api.post('/users/auth/logout', {}, {
         withCredentials: true,
         _skipAuth: true,
         _isLogoutRequest: true

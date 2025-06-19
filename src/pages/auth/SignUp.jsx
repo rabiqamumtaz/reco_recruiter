@@ -16,6 +16,7 @@ export default function Signup() {
     phone: "",
     company: "",
     position: "",
+    department:"Recruitment",
     password: "",
     confirmPassword: "",
   });
@@ -43,6 +44,7 @@ export default function Signup() {
       email: form.email,
       phone: form.phone,
       company: form.company,
+      department:form.department,
       position: form.position,
       password: form.password,
     };
