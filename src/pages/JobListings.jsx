@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdVisibility, MdShare, MdMoreVert } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
 import JobPostingModal from "../components/JobPostingModal";
 import JobDetailsModal from "../components/JobDetailsModal";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
+
 import { useQuery } from "@tanstack/react-query";
 import { fetchJobs } from "../apis/jobs";
 import { formatDate } from "../utils/date";
@@ -13,6 +16,9 @@ import { formatDate } from "../utils/date";
 const JobListings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [DeleteJob, setDeleteJob] = useState(null);
+
   const jobsPerPage = 8;
 
   const {
@@ -84,6 +90,11 @@ const JobListings = () => {
     (currentPage - 1) * jobsPerPage,
     currentPage * jobsPerPage
   );
+
+  const handleDelete = (id) => {
+    console.log("Deleting item:", id);
+    // call your delete API here
+  };
 
   return (
     <div className="space-y-6">
@@ -178,10 +189,7 @@ const JobListings = () => {
                 paginatedJobs.map((job) => (
                   <tr
                     key={job.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewJob(job);
-                    }}
+                    onClick={() => handleViewJob(job)} // ✅ This triggers modal open
                     className="hover:bg-gray-50 cursor-pointer"
                   >
                     <td className="px-6 py-3 text-sm text-gray-900 font-medium">
@@ -205,21 +213,40 @@ const JobListings = () => {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewJob(job);
+                            e.stopPropagation(); // ✅ Prevents row click
+                            handleViewJob(job); // Optional: open the modal too
                           }}
                           className="text-blue-600 hover:text-blue-900"
                         >
                           <MdVisibility size={18} />
                         </button>
                         <button
-                          onClick={() => handleShareClick(job)}
+                          onClick={(e) => {
+                            e.stopPropagation(); // ✅ Prevents modal opening
+                            handleShareClick(job);
+                          }}
                           className="text-green-600 hover:text-green-900"
                         >
                           <MdShare size={18} />
                         </button>
-                        <button className="text-gray-400 hover:text-gray-600">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // ✅ Prevents modal opening
+                            // maybe show dropdown menu here
+                          }}
+                          className="text-gray-400 hover:text-gray-600"
+                        >
                           <MdMoreVert size={18} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); 
+                            setDeleteJob(job); 
+                            setIsDeleteModalOpen(true); 
+                          }}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <RiDeleteBin6Line />
                         </button>
                       </div>
                     </td>
@@ -242,161 +269,167 @@ const JobListings = () => {
         onClose={() => setShowJobPostingModal(false)}
         job={selectedJob}
       />
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => handleDelete(DeleteJob?.id)}
+        itemName={DeleteJob?.title || "Job"}
+      />
     </div>
   );
 };
 
 export default JobListings;
 
-//  const allJobs = [
-//   {
-//     id: 101,
-//     title: "Senior React Developer",
-//     company: "InnovateTech",
-//     location: "San Francisco, CA",
-//     type: "Full-time",
-//     salary: "$130,000 - $160,000",
-//     status: "new",
-//     postedDate: "2 days ago",
-//     deadline: "2025-07-11", // Approximately 1 month from postedDate
-//     remote: true,
-//     skills: ["React", "TypeScript", "GraphQL", "Node.js", "AWS"],
-//     description:
-//       "Join our innovative team as a Senior React Developer. You'll be working on cutting-edge web applications that serve millions of users worldwide. We're looking for someone passionate about creating exceptional user experiences.",
-//     requirements: [
-//       "5+ years of React development experience",
-//       "Strong TypeScript and JavaScript skills",
-//       "Experience with GraphQL and REST APIs",
-//       "Knowledge of modern frontend build tools",
-//       "Experience with testing frameworks (Jest, React Testing Library)",
-//     ],
-//     companyInfo: {
-//       name: "InnovateTech",
-//       industry: "Technology",
-//       size: "200-500 employees",
-//       description:
-//         "InnovateTech is a fast-growing technology company focused on building the next generation of web applications. We value innovation, collaboration, and continuous learning.",
-//     },
-//     applications: 6,
-//   },
-//   {
-//     id: 102,
-//     title: "Full Stack Engineer",
-//     company: "CloudSolutions",
-//     location: "Remote",
-//     type: "Full-time",
-//     salary: "$110,000 - $140,000",
-//     status: "urgent",
-//     postedDate: "1 day ago",
-//     deadline: "2025-07-04", // Approximately 3 weeks from postedDate
-//     applications: 6,
-//     remote: true,
-//     skills: ["React", "Node.js", "Python", "PostgreSQL", "Docker"],
-//     description:
-//       "We're seeking a talented Full Stack Engineer to join our remote team. You'll work on both frontend and backend systems, contributing to our cloud-based solutions.",
-//     requirements: [
-//       "4+ years of full-stack development experience",
-//       "Proficiency in React and Node.js",
-//       "Experience with Python and PostgreSQL",
-//       "Knowledge of cloud platforms (AWS, GCP, or Azure)",
-//       "Strong problem-solving skills",
-//     ],
-//     companyInfo: {
-//       name: "CloudSolutions",
-//       industry: "Cloud Computing",
-//       size: "100-200 employees",
-//       description:
-//         "CloudSolutions provides enterprise cloud infrastructure and services to businesses worldwide.",
-//     },
-//   },
-//   {
-//     id: 103,
-//     title: "Frontend Developer",
-//     company: "DesignStudio",
-//     location: "New York, NY",
-//     applications: 6,
-//     type: "Full-time",
-//     salary: "$90,000 - $120,000",
-//     status: "new",
-//     postedDate: "3 days ago",
-//     deadline: "2025-07-13", // Approximately 1 month from postedDate
-//     remote: false,
-//     skills: ["React", "Vue.js", "CSS", "JavaScript", "Figma"],
-//     description:
-//       "Join our creative team as a Frontend Developer. You'll work closely with designers to bring beautiful, responsive designs to life.",
-//     requirements: [
-//       "3+ years of frontend development experience",
-//       "Strong CSS and JavaScript skills",
-//       "Experience with React or Vue.js",
-//       "Understanding of responsive design principles",
-//       "Familiarity with design tools like Figma",
-//     ],
-//     companyInfo: {
-//       name: "DesignStudio",
-//       industry: "Design & Creative",
-//       size: "50-100 employees",
-//       description:
-//         "DesignStudio is a creative agency specializing in digital design and user experience.",
-//     },
-//   },
-//   {
-//     id: 104,
-//     title: "Backend Engineer",
-//     company: "DataFlow",
-//     applications: 6,
-//     location: "Austin, TX",
-//     type: "Full-time",
-//     salary: "$120,000 - $150,000",
-//     status: "new",
-//     postedDate: "1 week ago",
-//     deadline: "2025-07-18", // Approximately 1 month from postedDate
-//     remote: true,
-//     skills: ["Python", "Django", "PostgreSQL", "Redis", "Kubernetes"],
-//     description:
-//       "We're looking for a Backend Engineer to help build and scale our data processing infrastructure. You'll work with large datasets and high-performance systems.",
-//     requirements: [
-//       "4+ years of backend development experience",
-//       "Strong Python and Django skills",
-//       "Experience with databases and caching systems",
-//       "Knowledge of containerization and orchestration",
-//       "Experience with data processing pipelines",
-//     ],
-//     companyInfo: {
-//       name: "DataFlow",
-//       industry: "Data Analytics",
-//       size: "100-200 employees",
-//       description:
-//         "DataFlow specializes in real-time data processing and analytics solutions for enterprise clients.",
-//     },
-//   },
-//   {
-//     id: 105,
-//     title: "DevOps Engineer",
-//     company: "ScaleTech",
-//     applications: 6,
-//     location: "Seattle, WA",
-//     type: "Full-time",
-//     salary: "$140,000 - $170,000",
-//     status: "urgent",
-//     postedDate: "4 days ago",
-//     deadline: "2025-07-06", // Approximately 3 weeks from postedDate
-//     remote: true,
-//     skills: ["AWS", "Kubernetes", "Terraform", "Docker", "Python"],
-//     description:
-//       "Join our DevOps team to help build and maintain our cloud infrastructure. You'll work on automation, monitoring, and scaling our systems.",
-//     requirements: [
-//       "5+ years of DevOps/Infrastructure experience",
-//       "Strong AWS and Kubernetes knowledge",
-//       "Experience with Infrastructure as Code (Terraform)",
-//       "Proficiency in scripting languages (Python, Bash)",
-//       "Experience with CI/CD pipelines",
-//     ],
-//     companyInfo: {
-//       name: "ScaleTech",
-//       industry: "Technology",
-//       size: "500+ employees",
-//       description:
-//         "ScaleTech provides scalable technology solutions for enterprise clients worldwide.",
-//     },
-//   },
-// ];
+const allJobs = [
+  {
+    id: 101,
+    title: "Senior React Developer",
+    company: "InnovateTech",
+    location: "San Francisco, CA",
+    type: "Full-time",
+    salary: "$130,000 - $160,000",
+    status: "new",
+    postedDate: "2 days ago",
+    deadline: "2025-07-11", // Approximately 1 month from postedDate
+    remote: true,
+    skills: ["React", "TypeScript", "GraphQL", "Node.js", "AWS"],
+    description:
+      "Join our innovative team as a Senior React Developer. You'll be working on cutting-edge web applications that serve millions of users worldwide. We're looking for someone passionate about creating exceptional user experiences.",
+    requirements: [
+      "5+ years of React development experience",
+      "Strong TypeScript and JavaScript skills",
+      "Experience with GraphQL and REST APIs",
+      "Knowledge of modern frontend build tools",
+      "Experience with testing frameworks (Jest, React Testing Library)",
+    ],
+    companyInfo: {
+      name: "InnovateTech",
+      industry: "Technology",
+      size: "200-500 employees",
+      description:
+        "InnovateTech is a fast-growing technology company focused on building the next generation of web applications. We value innovation, collaboration, and continuous learning.",
+    },
+    applications: 6,
+  },
+  {
+    id: 102,
+    title: "Full Stack Engineer",
+    company: "CloudSolutions",
+    location: "Remote",
+    type: "Full-time",
+    salary: "$110,000 - $140,000",
+    status: "urgent",
+    postedDate: "1 day ago",
+    deadline: "2025-07-04", // Approximately 3 weeks from postedDate
+    applications: 6,
+    remote: true,
+    skills: ["React", "Node.js", "Python", "PostgreSQL", "Docker"],
+    description:
+      "We're seeking a talented Full Stack Engineer to join our remote team. You'll work on both frontend and backend systems, contributing to our cloud-based solutions.",
+    requirements: [
+      "4+ years of full-stack development experience",
+      "Proficiency in React and Node.js",
+      "Experience with Python and PostgreSQL",
+      "Knowledge of cloud platforms (AWS, GCP, or Azure)",
+      "Strong problem-solving skills",
+    ],
+    companyInfo: {
+      name: "CloudSolutions",
+      industry: "Cloud Computing",
+      size: "100-200 employees",
+      description:
+        "CloudSolutions provides enterprise cloud infrastructure and services to businesses worldwide.",
+    },
+  },
+  {
+    id: 103,
+    title: "Frontend Developer",
+    company: "DesignStudio",
+    location: "New York, NY",
+    applications: 6,
+    type: "Full-time",
+    salary: "$90,000 - $120,000",
+    status: "new",
+    postedDate: "3 days ago",
+    deadline: "2025-07-13", // Approximately 1 month from postedDate
+    remote: false,
+    skills: ["React", "Vue.js", "CSS", "JavaScript", "Figma"],
+    description:
+      "Join our creative team as a Frontend Developer. You'll work closely with designers to bring beautiful, responsive designs to life.",
+    requirements: [
+      "3+ years of frontend development experience",
+      "Strong CSS and JavaScript skills",
+      "Experience with React or Vue.js",
+      "Understanding of responsive design principles",
+      "Familiarity with design tools like Figma",
+    ],
+    companyInfo: {
+      name: "DesignStudio",
+      industry: "Design & Creative",
+      size: "50-100 employees",
+      description:
+        "DesignStudio is a creative agency specializing in digital design and user experience.",
+    },
+  },
+  {
+    id: 104,
+    title: "Backend Engineer",
+    company: "DataFlow",
+    applications: 6,
+    location: "Austin, TX",
+    type: "Full-time",
+    salary: "$120,000 - $150,000",
+    status: "new",
+    postedDate: "1 week ago",
+    deadline: "2025-07-18", // Approximately 1 month from postedDate
+    remote: true,
+    skills: ["Python", "Django", "PostgreSQL", "Redis", "Kubernetes"],
+    description:
+      "We're looking for a Backend Engineer to help build and scale our data processing infrastructure. You'll work with large datasets and high-performance systems.",
+    requirements: [
+      "4+ years of backend development experience",
+      "Strong Python and Django skills",
+      "Experience with databases and caching systems",
+      "Knowledge of containerization and orchestration",
+      "Experience with data processing pipelines",
+    ],
+    companyInfo: {
+      name: "DataFlow",
+      industry: "Data Analytics",
+      size: "100-200 employees",
+      description:
+        "DataFlow specializes in real-time data processing and analytics solutions for enterprise clients.",
+    },
+  },
+  {
+    id: 105,
+    title: "DevOps Engineer",
+    company: "ScaleTech",
+    applications: 6,
+    location: "Seattle, WA",
+    type: "Full-time",
+    salary: "$140,000 - $170,000",
+    status: "urgent",
+    postedDate: "4 days ago",
+    deadline: "2025-07-06", // Approximately 3 weeks from postedDate
+    remote: true,
+    skills: ["AWS", "Kubernetes", "Terraform", "Docker", "Python"],
+    description:
+      "Join our DevOps team to help build and maintain our cloud infrastructure. You'll work on automation, monitoring, and scaling our systems.",
+    requirements: [
+      "5+ years of DevOps/Infrastructure experience",
+      "Strong AWS and Kubernetes knowledge",
+      "Experience with Infrastructure as Code (Terraform)",
+      "Proficiency in scripting languages (Python, Bash)",
+      "Experience with CI/CD pipelines",
+    ],
+    companyInfo: {
+      name: "ScaleTech",
+      industry: "Technology",
+      size: "500+ employees",
+      description:
+        "ScaleTech provides scalable technology solutions for enterprise clients worldwide.",
+    },
+  },
+];

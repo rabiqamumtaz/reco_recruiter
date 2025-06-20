@@ -1,8 +1,17 @@
 "use client"
+import {useState} from "react"
 import { MdClose, MdLocationOn, MdWork, MdAttachMoney, MdSchedule, MdBusiness } from "react-icons/md"
+import CandidateDetailModal from "./CandidateDetailModal"
 
 // Job details modal component
 const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
+  const[isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedJob, setSelectedJob] = useState(null);
+ 
+   const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedJob(null);
+  };
   // console.log(job)
   if (!isOpen || !job) return null
 
@@ -196,6 +205,13 @@ const JobDetailsModal = ({ isOpen, onClose, job, goToCandidate }) => {
           </div>
         </div>
       </div>
+      <CandidateDetailModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        job={job}
+        goToCandidate={goToCandidate}
+       
+      />
     </div>
   )
 }

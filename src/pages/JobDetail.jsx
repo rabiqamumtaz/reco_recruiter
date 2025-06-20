@@ -124,52 +124,60 @@ const JobDetail = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {applications.map((candidate) => (
-                  <tr key={candidate._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="font-medium text-gray-900">{candidate.applicantId.name}</div>
-                        <div className="text-sm text-gray-500">{candidate.applicantId.email}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(candidate.submittedDate)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-32">
-                        <StatusDropdown
-                          value={candidate.status}
-                          onChange={(newStatus) => handleStatusChange(candidate._id, newStatus)}
-                          options={statusOptions}
-                        />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="flex items-center space-x-1 text-blue-600 hover:text-blue-800">
-                        <MdDownload size={16} />
-                        <span className="text-sm">Download</span>
-                      </button>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => handleCandidateClick(candidate)}
-                          className="flex items-center space-x-1 text-gray-600 hover:text-gray-800 px-2 py-1 rounded border border-gray-300 hover:bg-gray-50"
-                        >
-                          <MdVisibility size={16} />
-                          <span className="text-sm">View</span>
-                        </button>
-                        <button
-                          onClick={() => setShowSubmitModal(true)}
-                          className="px-3 py-1 bg-black text-white text-sm rounded hover:bg-gray-800"
-                        >
-                          Submit
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {Array.isArray(applications) &&
+    applications.map((candidate) => (
+      <tr key={candidate._id} className="hover:bg-gray-50">
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div>
+            <div className="font-medium text-gray-900">
+              {candidate?.applicantId?.name || "N/A"}
+            </div>
+            <div className="text-sm text-gray-500">
+              {candidate?.applicantId?.email || "N/A"}
+            </div>
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {formatDate(candidate.submittedDate)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="w-32">
+            <StatusDropdown
+              value={candidate.status}
+              onChange={(newStatus) =>
+                handleStatusChange(candidate._id, newStatus)
+              }
+              options={statusOptions}
+            />
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <button className="flex items-center space-x-1 text-blue-600 hover:text-blue-800">
+            <MdDownload size={16} />
+            <span className="text-sm">Download</span>
+          </button>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handleCandidateClick(candidate)}
+              className="flex items-center space-x-1 text-gray-600 hover:text-gray-800 px-2 py-1 rounded border border-gray-300 hover:bg-gray-50"
+            >
+              <MdVisibility size={16} />
+              <span className="text-sm">View</span>
+            </button>
+            <button
+              onClick={() => setShowSubmitModal(true)}
+              className="px-3 py-1 bg-black text-white text-sm rounded hover:bg-gray-800"
+            >
+              Submit
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))}
+</tbody>
+
             </table>
           </div>
         )}
